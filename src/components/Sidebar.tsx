@@ -127,7 +127,7 @@ function SidebarItemWithBadge({ label, href, icon, isActive, badge }: { label: s
       {icon}
       {label}
       {badge > 0 && (
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-yellow-400 text-[10px] font-bold flex items-center justify-center text-black">
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-red-600 text-[10px] font-bold flex items-center justify-center text-white">
           {badge > 9 ? "9+" : badge}
         </span>
       )}
