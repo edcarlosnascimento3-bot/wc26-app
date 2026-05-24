@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const next = url.searchParams.get("next") || "/partidas";
+  const code = url.searchParams.get("code");
 
   const cookieStore = await cookies();
   const supabase = createServerClient(
@@ -18,6 +19,9 @@ export async function GET(req: Request) {
     }
   );
 
-  await supabase.auth.getUser();
+  if (code) {
+    await supabase.auth.exchangeCodeForSession(code);
+  }
+
   return NextResponse.redirect(new URL(next, url.origin));
 }
