@@ -12,15 +12,21 @@ export async function GET() {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const { data } = await supabase
+  let { data } = await supabase
     .from("profiles")
     .select("display_name, avatar_url")
     .eq("id", auth.user.id)
     .single();
 
+  if (!data) {
+    const fallbackName = auth.user.email?.split("@")[0] ?? "Jogador";
+    await supabaseAdmin.from("profiles").upsert({ id: auth.user.id, display_name: fallbackName });
+    data = { display_name: fallbackName, avatar_url: null };
+  }
+
   return NextResponse.json({
-    display_name: data?.display_name ?? auth.user.email?.split("@")[0] ?? "",
-    avatar_url: data?.avatar_url ?? null,
+    display_name: data.display_name ?? "Jogador",
+    avatar_url: data.avatar_url ?? null,
   });
 }
 
