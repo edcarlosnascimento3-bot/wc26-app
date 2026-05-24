@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 const icons: Record<string, ReactNode> = {
@@ -43,6 +44,20 @@ function SidebarItem({ label, href, icon, isActive }: { label: string; href: str
 
 function SidebarInner() {
   const path = usePathname();
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    if (path === "/chat") { setUnread(0); return; }
+    const fetchUnread = async () => {
+      try {
+        const r = await fetch("/api/unread-count");
+        if (r.ok) setUnread((await r.json()).unread);
+      } catch {}
+    };
+    fetchUnread();
+    const id = setInterval(fetchUnread, 10000);
+    return () => clearInterval(id);
+  }, [path]);
 
   const partidasSubmenus = faseSubmenus.map(f => ({
     label: f.label,
@@ -67,7 +82,7 @@ function SidebarInner() {
       <SidebarItem label="Pontuação" href="/pontuacao" icon={icons["Pontuação"]} isActive={path === "/pontuacao"} />
       <SidebarItem label="Artilharia" href="/artilharia" icon={icons["Artilharia"]} isActive={path === "/artilharia"} />
       <SidebarItem label="Chaveamento" href="/chaveamento" icon={icons["Chaveamento"]} isActive={path === "/chaveamento"} />
-      <SidebarItem label="Chat" href="/chat" icon={icons["Chat"]} isActive={path === "/chat"} />
+      <SidebarItemWithBadge label="Chat" href="/chat" icon={icons["Chat"]} isActive={path === "/chat"} badge={unread} />
     </>
   );
 }
@@ -98,6 +113,25 @@ function SidebarGroupInner({ label, icon, submenus, baseHref, path }: { label: s
         })}
       </div>
     </div>
+  );
+}
+
+function SidebarItemWithBadge({ label, href, icon, isActive, badge }: { label: string; href: string; icon: ReactNode; isActive: boolean; badge: number }) {
+  return (
+    <Link
+      href={href}
+      className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+        isActive ? "bg-black text-white" : "hover:bg-gray-100"
+      }`}
+    >
+      {icon}
+      {label}
+      {badge > 0 && (
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-yellow-400 text-[10px] font-bold flex items-center justify-center text-black">
+          {badge > 9 ? "9+" : badge}
+        </span>
+      )}
+    </Link>
   );
 }
 
