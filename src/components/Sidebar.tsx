@@ -136,10 +136,27 @@ function SidebarItemWithBadge({ label, href, icon, isActive, badge }: { label: s
 }
 
 export function Sidebar() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <aside className="w-60 border-r min-h-screen p-4 space-y-2 flex-shrink-0">
-      <div className="font-bold text-lg mb-4">Copa 2026</div>
-      <SidebarInner />
-    </aside>
+    <>
+      <button onClick={() => setOpen(!open)}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-lg bg-black text-white flex items-center justify-center shadow-lg">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+          {open ? (
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          ) : (
+            <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+          )}
+        </svg>
+      </button>
+      {open && (
+        <div className="fixed inset-0 bg-black/30 z-30 md:hidden" onClick={() => setOpen(false)} />
+      )}
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-60 border-r min-h-screen p-4 space-y-2 flex-shrink-0 bg-white transition-transform md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="font-bold text-lg mb-4 mt-14 md:mt-0">Copa 2026</div>
+        <SidebarInner />
+      </aside>
+    </>
   );
 }

@@ -33,8 +33,8 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen grid place-items-center p-6">
-      <div className="w-full max-w-md rounded-2xl border bg-white p-8 space-y-6 shadow-sm">
+    <div className="min-h-screen grid place-items-center px-4 md:px-6">
+      <div className="w-full max-w-md rounded-2xl border bg-white p-6 md:p-8 space-y-6 shadow-sm mx-4 md:mx-0">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold">Copa 2026</h1>
           <p className="text-sm opacity-70">Entre com seu email</p>
