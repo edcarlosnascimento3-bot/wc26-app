@@ -176,7 +176,7 @@ export function TopBar() {
               </div>
             )}
             <button onClick={() => setShowForm(!showForm)}
-                    className="text-xs text-blue-600 hover:underline leading-none">
+                    className="text-xs font-bold text-red-600 hover:underline leading-none">
               Editar
             </button>
           </div>
