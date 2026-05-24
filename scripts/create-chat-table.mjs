@@ -4,7 +4,7 @@ const ref = "fvkghxqzjcqewbqmnopy";
 const sql = `
 CREATE TABLE IF NOT EXISTS messages (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id),
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   content text NOT NULL CHECK (char_length(content) > 0 AND char_length(content) <= 500),
   created_at timestamptz NOT NULL DEFAULT now()
 );
