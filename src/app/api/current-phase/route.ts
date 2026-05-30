@@ -112,7 +112,12 @@ export async function GET(request: NextRequest) {
         scorersByMatch,
       });
     }
-    const bracket = buildBracket(slots, standingsByGroup as any, scoreBySlot, overrides);
+    const bracket = buildBracket(
+      slots,
+      groupDone ? (standingsByGroup as any) : {},
+      groupDone ? scoreBySlot : {},
+      overrides,
+    );
     const faseMatches = bracket.filter(m => m.round === faseParam);
     const matchIdToReal = new Map(matches.map(m => [m.id, { real_home: m.real_home, real_away: m.real_away }]));
     const faseMatchesWithReal = faseMatches.map(m => {
