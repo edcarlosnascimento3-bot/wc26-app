@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { fmtBR } from "@/lib/wc/tz";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 
 type Message = {
@@ -20,12 +21,6 @@ function matchStatus(kickoffMs: number, now: number) {
   if (elapsed < 60) return { text: "Intervalo", cls: "text-yellow-600 font-bold" };
   if (elapsed < 105) return { text: `${Math.floor(elapsed - 15)}'`, cls: "text-green-600 font-bold" };
   return { text: "Jogo finalizado", cls: "text-red-600 font-bold" };
-}
-
-function fmtBR(iso: string) {
-  return new Date(iso).toLocaleString("pt-BR", {
-    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
-  });
 }
 
 function sameDay(d1: Date, d2: Date) {

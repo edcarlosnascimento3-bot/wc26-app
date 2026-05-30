@@ -1,3 +1,4 @@
+import { fmtBR } from "@/lib/wc/tz";
 import { supabaseServer } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
@@ -6,12 +7,6 @@ const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
-
-function fmtBR(iso: string) {
-  return new Date(iso).toLocaleString("pt-BR", {
-    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
-  });
-}
 
 function scoreLabel(realH: number | null, realA: number | null, predH: number | null, predA: number | null): { pts: number; label: string } {
   if (realH == null || realA == null || predH == null || predA == null) return { pts: 0, label: "—" };

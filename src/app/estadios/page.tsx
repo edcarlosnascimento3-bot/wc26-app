@@ -1,3 +1,4 @@
+import { fmtBR } from "@/lib/wc/tz";
 import { supabaseServer } from "@/lib/supabase/server";
 import Link from "next/link";
 
@@ -28,7 +29,6 @@ export default async function EstadiosPage() {
         )}
         {(venuesR.data ?? []).map(v => {
           const venueMatches = matchesByVenue.get(v.id) ?? [];
-          const fmtDate = (d: string) => new Date(d).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
           return (
             <div key={v.id} className="rounded-xl border overflow-hidden bg-white">
               {v.photo_url ? (
@@ -52,7 +52,7 @@ export default async function EstadiosPage() {
                           <span className="opacity-50 mx-0.5">vs</span>
                           {away?.flag_url && <img src={away.flag_url} alt="" className="w-4 h-3 object-cover rounded" />}
                           <span className="truncate">{away?.name ?? m.away_team_id}</span>
-                          <span className="ml-auto opacity-40">{fmtDate(m.kickoff_utc)}</span>
+                          <span className="ml-auto opacity-40">{fmtBR(m.kickoff_utc)}</span>
                         </div>
                       );
                     })}
