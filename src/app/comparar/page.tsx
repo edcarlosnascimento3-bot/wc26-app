@@ -1,5 +1,11 @@
 import { supabaseServer } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+);
 
 function fmtBR(iso: string) {
   return new Date(iso).toLocaleString("pt-BR", {
@@ -42,7 +48,7 @@ export default async function CompararPage({
     supabase.from("teams").select("id, name, flag_url"),
     supabase.from("matches").select("id, phase, group_code, home_team_id, away_team_id, real_home, real_away, kickoff_utc").order("kickoff_utc"),
     supabase.from("predictions").select("match_id, pred_home, pred_away").eq("user_id", auth.user.id),
-    supabase.from("predictions").select("match_id, pred_home, pred_away").eq("user_id", com),
+    supabaseAdmin.from("predictions").select("match_id, pred_home, pred_away").eq("user_id", com),
   ]);
 
   const teamsMap = new Map((teamsR.data ?? []).map(t => [t.id, { name: t.name, flag_url: t.flag_url }]));
