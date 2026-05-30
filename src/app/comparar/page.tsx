@@ -168,7 +168,7 @@ export default async function CompararPage({
                         {mp ? (
                           <span className={myScore && myScore.pts > 0 ? "text-green-700 font-bold" : ""}>
                             {mp.pred_home} x {mp.pred_away}
-                            {myScore && <span className="text-[10px] ml-1 opacity-60">({myScore.label})</span>}
+                            {hasResult && myScore && myScore.label !== "—" && <span className="text-[10px] ml-1 opacity-60">({myScore.label})</span>}
                           </span>
                         ) : (
                           <span className="text-xs opacity-30 italic">—</span>
@@ -178,7 +178,7 @@ export default async function CompararPage({
                         {tp ? (
                           <span className={theirScore && theirScore.pts > 0 ? "text-green-700 font-bold" : ""}>
                             {tp.pred_home} x {tp.pred_away}
-                            {theirScore && <span className="text-[10px] ml-1 opacity-60">({theirScore.label})</span>}
+                            {hasResult && theirScore && theirScore.label !== "—" && <span className="text-[10px] ml-1 opacity-60">({theirScore.label})</span>}
                           </span>
                         ) : (
                           <span className="text-xs opacity-30 italic">—</span>
