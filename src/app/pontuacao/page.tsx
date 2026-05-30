@@ -1,5 +1,11 @@
 import { supabaseServer } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import { OnlineDot } from "@/components/OnlineDot";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+);
 
 export default async function PontuacaoPage() {
   const supabase = await supabaseServer();
@@ -30,7 +36,7 @@ export default async function PontuacaoPage() {
 
   const [predsR, champR, matchesR] = await Promise.all([
     supabase.from("predictions").select("user_id, match_id, pred_home, pred_away"),
-    supabase.from("champion_picks").select("user_id, team_id"),
+    supabaseAdmin.from("champion_picks").select("user_id, team_id"),
     supabase.from("matches").select("id, real_home, real_away"),
   ]);
 
