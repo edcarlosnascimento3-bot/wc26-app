@@ -72,11 +72,11 @@ export function PartidaCard({ match, teamsMap, venuesMap, prediction, scorers }:
       </div>
 
       <div className="flex flex-col gap-3 mt-3">
-        <div className="flex justify-center gap-3 items-start">
-          <div className="flex flex-col items-end">
-            <div className="flex items-center gap-2">
-              {home?.flag_url && <img src={home.flag_url} alt="" className="w-8 h-6 object-cover rounded shadow-sm shrink-0" />}
-              <span className="text-sm font-medium truncate">{home?.name ?? (homeId ? fmtSource(match.homeFrom ?? match.home_source) : "—")}</span>
+        <div className="flex justify-center gap-2 sm:gap-3 items-start min-w-0">
+          <div className="flex flex-col items-end min-w-0 max-w-[35%] sm:max-w-none">
+            <div className="flex items-center gap-1 sm:gap-2">
+              {home?.flag_url && <img src={home.flag_url} alt="" className="w-6 sm:w-8 h-4 sm:h-6 object-cover rounded shadow-sm shrink-0" />}
+              <span className="text-xs sm:text-sm font-medium truncate min-w-0">{home?.name ?? (homeId ? fmtSource(match.homeFrom ?? match.home_source) : "—")}</span>
             </div>
             {isFinished && homeScorers.length > 0 && (
               <div className="text-left text-[11px] font-bold text-blue-600 leading-snug w-full mt-2">
@@ -86,11 +86,11 @@ export function PartidaCard({ match, teamsMap, venuesMap, prediction, scorers }:
               </div>
             )}
           </div>
-          <span className="font-bold text-lg shrink-0">{showHome} x {showAway}</span>
-          <div className="flex flex-col items-start">
-            <div className="flex items-center gap-2 flex-row-reverse">
-              {away?.flag_url && <img src={away.flag_url} alt="" className="w-8 h-6 object-cover rounded shadow-sm shrink-0" />}
-              <span className="text-sm font-medium truncate">{away?.name ?? (awayId ? fmtSource(match.awayFrom ?? match.away_source) : "—")}</span>
+          <span className="font-bold text-base sm:text-lg shrink-0">{showHome} x {showAway}</span>
+          <div className="flex flex-col items-start min-w-0 max-w-[35%] sm:max-w-none">
+            <div className="flex items-center gap-1 sm:gap-2 flex-row-reverse">
+              {away?.flag_url && <img src={away.flag_url} alt="" className="w-6 sm:w-8 h-4 sm:h-6 object-cover rounded shadow-sm shrink-0" />}
+              <span className="text-xs sm:text-sm font-medium truncate min-w-0">{away?.name ?? (awayId ? fmtSource(match.awayFrom ?? match.away_source) : "—")}</span>
             </div>
             {isFinished && awayScorers.length > 0 && (
               <div className="text-right text-[11px] font-bold text-blue-600 leading-snug w-full mt-2">

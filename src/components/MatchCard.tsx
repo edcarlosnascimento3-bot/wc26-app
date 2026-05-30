@@ -79,21 +79,21 @@ export function MatchCard({ match, prediction, onSaved, teamsMap, venuesMap }: P
         <span className="shrink-0">{fmtBR(match.kickoff_utc)}</span>
       </div>
 
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center justify-center gap-2 flex-1 flex-wrap">
-          {home?.flag_url && <img src={home.flag_url} alt="" className="w-7 h-5 object-cover rounded shadow-sm shrink-0" />}
-          <span className="text-[13px] font-medium whitespace-nowrap">{home?.name ?? match.home_team_id}</span>
+      <div className="flex items-center justify-between gap-1 sm:gap-2">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 flex-1 min-w-0">
+          {home?.flag_url && <img src={home.flag_url} alt="" className="w-6 sm:w-7 h-4 sm:h-5 object-cover rounded shadow-sm shrink-0" />}
+          <span className="text-[12px] sm:text-[13px] font-medium truncate min-w-0">{home?.name ?? match.home_team_id}</span>
 
-          <input className="w-11 border rounded-md px-1 py-1 text-center disabled:opacity-40 disabled:cursor-not-allowed" value={h}
+          <input className="w-9 sm:w-11 border rounded-md px-1 py-1 text-center disabled:opacity-40 disabled:cursor-not-allowed shrink-0" value={h}
             onChange={(e)=>setH(e.target.value==="" ? "" : Number(e.target.value))}
             inputMode="numeric" disabled={editing ? false : (saved || blocked || isPast)} />
-          <span className="font-semibold">X</span>
-          <input className="w-11 border rounded-md px-1 py-1 text-center disabled:opacity-40 disabled:cursor-not-allowed" value={a}
+          <span className="font-semibold shrink-0">X</span>
+          <input className="w-9 sm:w-11 border rounded-md px-1 py-1 text-center disabled:opacity-40 disabled:cursor-not-allowed shrink-0" value={a}
             onChange={(e)=>setA(e.target.value==="" ? "" : Number(e.target.value))}
             inputMode="numeric" disabled={editing ? false : (saved || blocked || isPast)} />
 
-          <span className="text-[13px] font-medium whitespace-nowrap">{away?.name ?? match.away_team_id}</span>
-          {away?.flag_url && <img src={away.flag_url} alt="" className="w-7 h-5 object-cover rounded shadow-sm shrink-0" />}
+          <span className="text-[12px] sm:text-[13px] font-medium truncate min-w-0">{away?.name ?? match.away_team_id}</span>
+          {away?.flag_url && <img src={away.flag_url} alt="" className="w-6 sm:w-7 h-4 sm:h-5 object-cover rounded shadow-sm shrink-0" />}
         </div>
 
         {saved && !editing ? (
