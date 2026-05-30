@@ -228,8 +228,9 @@ export default function ChatPage() {
             const away = teamsMap.get(m.away_team_id);
             const kickoffMs = new Date(m.kickoff_utc).getTime();
             const status = matchStatus(kickoffMs, now);
-            const showHome = m.real_home != null ? m.real_home : 0;
-            const showAway = m.real_away != null ? m.real_away : 0;
+            const hasResult = m.real_home != null && m.real_away != null;
+            const showHome = hasResult ? m.real_home : "-";
+            const showAway = hasResult ? m.real_away : "-";
 
             return (
               <div key={m.id} className="rounded-xl border bg-white overflow-hidden">
