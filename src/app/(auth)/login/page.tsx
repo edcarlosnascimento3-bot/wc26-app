@@ -17,7 +17,7 @@ function LoginForm() {
       email,
       options: {
         shouldCreateUser: true,
-        redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/callback`,
       },
     });
     if (err) return setError(err.message);
