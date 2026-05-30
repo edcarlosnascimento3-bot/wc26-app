@@ -5,6 +5,7 @@ import { fmtBR } from "@/lib/wc/tz";
 type Props = {
   match: any;
   teamsMap: Map<string, { name: string; flag_url: string | null }>;
+  venuesMap?: Record<string, { name: string; city: string }>;
   prediction?: any;
   scorers?: { player: string; team_id: string; goals: number }[];
 };
@@ -27,7 +28,7 @@ function fmtSource(token: string | null): string {
   return token;
 }
 
-export function PartidaCard({ match, teamsMap, prediction, scorers }: Props) {
+export function PartidaCard({ match, teamsMap, venuesMap, prediction, scorers }: Props) {
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -50,19 +51,23 @@ export function PartidaCard({ match, teamsMap, prediction, scorers }: Props) {
   const r = match.round ?? match.phase;
   const phaseLabel = r === "group" ? `Grupo ${match.group_code}` : (cardPhaseLabels[r] ?? r?.toUpperCase() ?? "");
 
+  const venueId = match.venue_id ?? match.venueId;
+  const venue = venuesMap?.[venueId];
+
   const homeScorers = scorers?.filter(s => s.team_id === homeId) ?? [];
   const awayScorers = scorers?.filter(s => s.team_id === awayId) ?? [];
 
   return (
     <div className="rounded-xl border p-4 bg-gray-200 flex flex-col">
-      <div className="flex justify-between text-xs">
-        <span className="opacity-60">{phaseLabel}</span>
+      <div className="flex justify-between text-xs gap-2">
+        <span className="opacity-60 shrink-0">{phaseLabel}</span>
+        {venue && <span className="opacity-60 truncate">{venue.name}, {venue.city}</span>}
         {isPast ? (
-          <span className="text-yellow-500 font-bold">Partida em andamento</span>
+          <span className="text-yellow-500 font-bold shrink-0">Partida em andamento</span>
         ) : kickoffUTC ? (
-          <span className="opacity-60">{fmtBR(kickoffUTC)}</span>
+          <span className="opacity-60 shrink-0">{fmtBR(kickoffUTC)}</span>
         ) : (
-          <span className="opacity-60">Horário a definir</span>
+          <span className="opacity-60 shrink-0">Horário a definir</span>
         )}
       </div>
 

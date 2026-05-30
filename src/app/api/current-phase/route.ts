@@ -22,10 +22,11 @@ export async function GET(request: NextRequest) {
 
   const faseParam = request.nextUrl.searchParams.get("fase");
 
-  const [matchesR, slotsR, teamsR, predsR, scorersR] = await Promise.all([
+  const [matchesR, slotsR, teamsR, venuesR, predsR, scorersR] = await Promise.all([
     supabase.from("matches").select("*").order("kickoff_utc"),
     supabase.from("bracket_slots").select("*"),
     supabase.from("teams").select("id,name,flag_url,group_code"),
+    supabase.from("venues").select("id,name,city"),
     supabase.from("predictions").select("match_id,pred_home,pred_away").eq("user_id", auth.user.id),
     supabase.from("goalscorers").select("match_id, player_id, team_id, goals, players!inner(name)"),
   ]);
@@ -33,7 +34,13 @@ export async function GET(request: NextRequest) {
   const matches = matchesR.data ?? [];
   const slots = slotsR.data ?? [];
   const teams = teamsR.data ?? [];
+  const venues = venuesR.data ?? [];
   const predMap = new Map((predsR.data ?? []).map(p => [p.match_id, p]));
+
+  const venuesMap: Record<string, { name: string; city: string }> = {};
+  for (const v of venues) {
+    venuesMap[v.id] = { name: v.name, city: v.city };
+  }
 
   const scorersByMatch: Record<string, { player: string; team_id: string; goals: number }[]> = {};
   for (const s of scorersR.data ?? []) {
@@ -100,6 +107,7 @@ export async function GET(request: NextRequest) {
         label: phaseLabels.group,
         matches: groupMatches,
         teamsMap,
+        venuesMap,
         groupDone,
         scorersByMatch,
       });
@@ -116,6 +124,7 @@ export async function GET(request: NextRequest) {
       label: phaseLabels[faseParam] ?? faseParam,
       matches: faseMatchesWithReal,
       teamsMap,
+      venuesMap,
       groupDone,
       scorersByMatch,
     });
@@ -127,6 +136,7 @@ export async function GET(request: NextRequest) {
       label: phaseLabels.group,
       matches: groupMatches,
       teamsMap,
+      venuesMap,
       groupDone: false,
       scorersByMatch,
     });
@@ -163,6 +173,7 @@ export async function GET(request: NextRequest) {
     label: phaseLabels[currentPhase] ?? currentPhase,
     matches: phaseMatchesWithReal,
     teamsMap,
+    venuesMap,
     groupDone: true,
     scorersByMatch,
   });

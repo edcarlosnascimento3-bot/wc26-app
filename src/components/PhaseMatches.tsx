@@ -9,6 +9,7 @@ export function PhaseMatches({ fase }: { fase?: string }) {
     label: string;
     matches: any[];
     teamsMap: Record<string, { name: string; flag_url: string | null }>;
+    venuesMap?: Record<string, { name: string; city: string }>;
     groupDone: boolean;
     scorersByMatch?: Record<string, any[]>;
   } | null>(null);
@@ -30,7 +31,7 @@ export function PhaseMatches({ fase }: { fase?: string }) {
       )}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
         {data.matches.map(m => (
-          <PartidaCard key={m.slot ?? m.id} match={m} teamsMap={teamsMap} scorers={data.scorersByMatch?.[m.id ?? m.slot]} />
+          <PartidaCard key={m.slot ?? m.id} match={m} teamsMap={teamsMap} venuesMap={data.venuesMap} scorers={data.scorersByMatch?.[m.id ?? m.slot]} />
         ))}
       </div>
     </div>
