@@ -85,16 +85,15 @@ export default async function PontuacaoPage() {
       <h1 className="text-2xl font-semibold">Pontuação</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
         <div className="rounded-xl border bg-white overflow-hidden">
-          <div className="grid grid-cols-[auto_auto_1fr_auto_auto] gap-3 text-xs font-semibold opacity-70 p-3 border-b items-center">
+          <div className="grid grid-cols-[auto_auto_1fr_auto] gap-3 text-xs font-semibold opacity-70 p-3 border-b items-center">
             <div>#</div>
             <div></div>
             <div>Usuário</div>
             <div className="text-right">Pts</div>
-            <div></div>
           </div>
           <div className="divide-y">
             {sorted.map((u, i) => (
-              <div key={u.id} className="grid grid-cols-[auto_auto_1fr_auto_auto] gap-3 items-center p-3 text-sm h-[52px]">
+              <div key={u.id} className="grid grid-cols-[auto_auto_1fr_auto] gap-3 items-center p-3 text-sm h-[52px]">
                 <div className="w-6 text-center font-bold opacity-50">{i + 1}</div>
                 <div className="w-8 h-8 shrink-0">
                   {u.avatar_url ? (
@@ -109,10 +108,10 @@ export default async function PontuacaoPage() {
                   <span className="font-medium truncate">{u.display_name}</span>
                   <OnlineDot lastSeenAt={u.last_seen_at} userId={u.id} />
                 </div>
-                <div className="font-bold text-lg text-right">{u.points}</div>
-                <div className="shrink-0">
+                <div className="font-bold text-lg text-right flex items-center justify-end gap-2">
+                  <span>{u.points}</span>
                   <a href={`/comparar?com=${u.id}`}
-                    className="text-xs text-blue-600 hover:text-blue-800 hover:underline whitespace-nowrap">
+                    className="text-xs font-normal text-blue-600 hover:text-blue-800 hover:underline whitespace-nowrap opacity-80 hover:opacity-100">
                     Ver Palpites
                   </a>
                 </div>
