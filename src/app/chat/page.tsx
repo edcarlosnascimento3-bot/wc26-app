@@ -52,6 +52,7 @@ export default function ChatPage() {
   ];
   const [todayMatches, setTodayMatches] = useState<any[]>([]);
   const [teamsMap, setTeamsMap] = useState<Map<string, Team>>(new Map());
+  const [venuesMap, setVenuesMap] = useState<Record<string, { name: string; city: string }>>({});
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -63,14 +64,20 @@ export default function ChatPage() {
     if (!auth?.user) return;
     setUserId(auth.user.id);
 
-    const [msgR, profR, teamsR, matchesR] = await Promise.all([
+    const [msgR, profR, teamsR, matchesR, venuesR] = await Promise.all([
       supabase.from("messages").select("id, user_id, content, created_at").order("created_at", { ascending: true }).limit(200),
       supabase.from("profiles").select("id, display_name, avatar_url"),
       supabase.from("teams").select("id, name, flag_url"),
       supabase.from("matches").select("*").eq("phase", "group").order("kickoff_utc"),
+      supabase.from("venues").select("id,name,city"),
     ]);
 
     if (teamsR.data) setTeamsMap(new Map(teamsR.data.map(t => [t.id, t])));
+    if (venuesR.data) {
+      const vm: Record<string, { name: string; city: string }> = {};
+      for (const v of venuesR.data) vm[v.id] = { name: v.name, city: v.city };
+      setVenuesMap(vm);
+    }
 
     if (profR.data && msgR.data) {
       const msgs = msgR.data.map(m => ({
@@ -234,11 +241,12 @@ export default function ChatPage() {
 
             return (
               <div key={m.id} className="rounded-xl border bg-white overflow-hidden">
-                <div className="px-4 py-2 bg-gray-50 border-b flex justify-between items-center">
-                  <span className="text-xs font-semibold opacity-60">
+                <div className="px-4 py-2 bg-gray-50 border-b flex justify-between items-center gap-2">
+                  <span className="text-xs font-semibold opacity-60 shrink-0">
                     {m.phase === "group" ? `Grupo ${m.group_code}` : m.phase.toUpperCase()}
                   </span>
-                  <span className="text-xs opacity-50">{fmtBR(m.kickoff_utc)}</span>
+                  {(() => { const v = venuesMap[m.venue_id]; return v ? <span className="text-xs opacity-50 truncate">{v.name}, {v.city}</span> : null; })()}
+                  <span className="text-xs opacity-50 shrink-0">{fmtBR(m.kickoff_utc)}</span>
                 </div>
 
                 <div className="p-4 space-y-3">
