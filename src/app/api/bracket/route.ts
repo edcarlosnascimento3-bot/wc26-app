@@ -8,11 +8,12 @@ export async function GET() {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const [slotsR, teamsR, matchesR, predsR] = await Promise.all([
+  const [slotsR, teamsR, matchesR, predsR, venuesR] = await Promise.all([
     supabase.from("bracket_slots").select("*"),
     supabase.from("teams").select("id,name,flag_url,group_code"),
     supabase.from("matches").select("id,phase,group_code,home_team_id,away_team_id,real_home,real_away,kickoff_utc,venue_id"),
     supabase.from("predictions").select("match_id,pred_home,pred_away").eq("user_id", auth.user.id),
+    supabase.from("venues").select("id,name,city"),
   ]);
 
   const slots = slotsR.data ?? [];
@@ -79,5 +80,10 @@ export async function GET() {
     teamsMap[t.id] = { name: t.name, flag_url: t.flag_url };
   }
 
-  return NextResponse.json({ bracket, teamsMap });
+  const venuesMap: Record<string, { name: string; city: string }> = {};
+  for (const v of venuesR.data ?? []) {
+    venuesMap[v.id] = { name: v.name, city: v.city };
+  }
+
+  return NextResponse.json({ bracket, teamsMap, venuesMap });
 }

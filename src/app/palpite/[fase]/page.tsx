@@ -25,14 +25,17 @@ export default async function PalpiteFasePage({
     const { PalpitePanel } = await import("@/components/PalpitePanel");
     const GROUPS = "ABCDEFGHIJKL".split("");
 
-    const [teamsR, matchesR, predsR] = await Promise.all([
+    const [teamsR, matchesR, predsR, venuesR] = await Promise.all([
       supabase.from("teams").select("*"),
       supabase.from("matches").select("*").eq("phase", "group").order("kickoff_utc"),
       supabase.from("predictions").select("*").eq("user_id", auth.user.id),
+      supabase.from("venues").select("id,name,city"),
     ]);
 
     const teamsMap = new Map((teamsR.data ?? []).map(t => [t.id, { name: t.name, flag_url: t.flag_url }]));
     const predMap = new Map((predsR.data ?? []).map(p => [p.match_id, p]));
+    const venuesMap: Record<string, { name: string; city: string }> = {};
+    for (const v of venuesR.data ?? []) venuesMap[v.id] = { name: v.name, city: v.city };
 
     const matchesByGroup = new Map<string, any[]>();
     for (const g of GROUPS) matchesByGroup.set(g, []);
@@ -51,6 +54,7 @@ export default async function PalpiteFasePage({
               <PalpitePanel
                 key={g} groupCode={g} matches={groupMatches}
                 predictionsMap={predMap} teamsMap={teamsMap}
+                venuesMap={venuesMap}
               />
             );
           })}
@@ -60,15 +64,18 @@ export default async function PalpiteFasePage({
   }
 
   // Bracket phases
-  const [teamsR, matchesR, bracketR, predsR] = await Promise.all([
+  const [teamsR, matchesR, bracketR, predsR, venuesR] = await Promise.all([
     supabase.from("teams").select("*"),
     supabase.from("matches").select("*"),
     supabase.from("bracket_slots").select("*"),
     supabase.from("predictions").select("*").eq("user_id", auth.user.id),
+    supabase.from("venues").select("id,name,city"),
   ]);
 
   const teamsMap = new Map((teamsR.data ?? []).map(t => [t.id, { name: t.name, flag_url: t.flag_url }]));
   const predMap = new Map((predsR.data ?? []).map(p => [p.match_id, p]));
+  const venuesMap: Record<string, { name: string; city: string }> = {};
+  for (const v of venuesR.data ?? []) venuesMap[v.id] = { name: v.name, city: v.city };
   const phaseMatches = (bracketR.data ?? []).filter(s => (s.round ?? s.slot?.split("_")[0]) === fase);
 
   return (
@@ -86,8 +93,11 @@ export default async function PalpiteFasePage({
           const home = teamsMap.get(match.home_team_id);
           const away = teamsMap.get(match.away_team_id);
           const pred = predMap.get(match.id);
+          const venueId = match.venue_id ?? match.venueId ?? (s as any).venue_id_override;
+          const venue = venueId ? venuesMap[venueId] : null;
           return (
             <div key={s.id} className="rounded-xl border p-4 bg-white space-y-2">
+              {venue && <div className="text-xs opacity-60 truncate">{venue.name}, {venue.city}</div>}
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 flex-1">
                   {home?.flag_url && <img src={home.flag_url} alt="" className="w-6 h-4 object-cover rounded" />}

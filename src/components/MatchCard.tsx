@@ -9,6 +9,7 @@ type Props = {
   prediction?: any;
   onSaved?: () => void;
   teamsMap?: Map<string, TeamInfo>;
+  venuesMap?: Record<string, { name: string; city: string }>;
 };
 
 function formatCountdown(ms: number): string {
@@ -25,7 +26,7 @@ function formatCountdown(ms: number): string {
   return `${hh}:${mm}:${ss}`;
 }
 
-export function MatchCard({ match, prediction, onSaved, teamsMap }: Props) {
+export function MatchCard({ match, prediction, onSaved, teamsMap, venuesMap }: Props) {
   const map = teamsMap ?? new Map();
   const [h, setH] = useState<number | "">(prediction?.pred_home ?? "");
   const [a, setA] = useState<number | "">(prediction?.pred_away ?? "");
@@ -68,9 +69,14 @@ export function MatchCard({ match, prediction, onSaved, teamsMap }: Props) {
 
   return (
     <div className="rounded-xl border p-3 space-y-2 bg-white">
-      <div className="flex justify-between text-sm opacity-70">
-        <span>{match.phase === "group" ? `Grupo ${match.group_code}` : match.phase.toUpperCase()}</span>
-        <span>{fmtBR(match.kickoff_utc)}</span>
+      <div className="flex justify-between text-sm opacity-70 gap-2">
+        <span className="shrink-0">{match.phase === "group" ? `Grupo ${match.group_code}` : match.phase.toUpperCase()}</span>
+        {(() => {
+          const vId = match.venue_id ?? match.venueId;
+          const v = vId ? venuesMap?.[vId] : null;
+          return v ? <span className="truncate opacity-60">{v.name}, {v.city}</span> : null;
+        })()}
+        <span className="shrink-0">{fmtBR(match.kickoff_utc)}</span>
       </div>
 
       <div className="flex items-center justify-between gap-2">

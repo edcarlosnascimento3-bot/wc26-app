@@ -58,7 +58,11 @@ function getColX(side: 'left' | 'center' | 'right', ri?: number) {
   return 0;
 }
 
-export function BracketTree({ matches, teamsMap = {} }: { matches: MatchResolved[]; teamsMap?: Record<string, { name: string; flag_url: string | null }> }) {
+export function BracketTree({ matches, teamsMap = {}, venuesMap = {} }: {
+  matches: MatchResolved[];
+  teamsMap?: Record<string, { name: string; flag_url: string | null }>;
+  venuesMap?: Record<string, { name: string; city: string }>;
+}) {
   const { roundsLeft, roundsRight, roundsCenter, positions, totalH, conns } = useMemo(() => {
     const byRound: Record<string, MatchResolved[]> = { r32:[], r16:[], qf:[], sf:[], "3p":[], final:[] };
     for (const m of matches) if (byRound[m.round]) byRound[m.round].push(m);
@@ -231,13 +235,18 @@ export function BracketTree({ matches, teamsMap = {} }: { matches: MatchResolved
       );
     }
 
+    const venueInfo = m.venueId ? venuesMap[m.venueId] : null;
+
     if (isCenter) {
       return (
         <div key={m.slot}
           className="absolute left-0.5 right-0.5 rounded-lg border-2 border-yellow-500 bg-white z-10 shadow-sm overflow-hidden"
           style={{ top: pos.top, height: pos.height }}
         >
-          <div className="text-[10px] font-bold text-black px-2 pt-1.5 leading-none">{m.slot}</div>
+          <div className="flex justify-between items-start px-2 pt-1.5 leading-none gap-1">
+            <span className="text-[10px] font-bold text-black shrink-0">{m.slot}</span>
+            {venueInfo && <span className="text-[8px] opacity-60 truncate text-right">{venueInfo.name}</span>}
+          </div>
           <div className="flex flex-col px-3 pb-2 justify-center" style={{ height: pos.height - 16 }}>
             <div className="flex-1 flex items-center min-h-0 justify-between">
               {(() => {
@@ -274,7 +283,10 @@ export function BracketTree({ matches, teamsMap = {} }: { matches: MatchResolved
         className="absolute left-0.5 right-0.5 rounded-lg border bg-white z-10 shadow-sm overflow-hidden"
         style={{ top: pos.top, height: pos.height }}
       >
-        <div className="text-[9px] font-bold text-black px-2 pt-1 leading-none">{m.slot}</div>
+        <div className="flex justify-between items-start px-2 pt-1 leading-none gap-1">
+          <span className="text-[9px] font-bold text-black shrink-0">{m.slot}</span>
+          {venueInfo && <span className="text-[7px] opacity-60 truncate text-right max-w-[120px]">{venueInfo.name}</span>}
+        </div>
         <div className="flex flex-col px-2 pb-1" style={{ height: pos.height - 12, marginTop: -2 }}>
           <div className="flex-1 flex items-center min-h-0">
             <Row tid={m.homeTeamId} t={homeT} score={m.homeScore} from={m.homeFrom} isHome={true} />

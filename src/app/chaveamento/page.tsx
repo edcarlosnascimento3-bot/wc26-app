@@ -5,6 +5,7 @@ import { BracketTree } from "@/components/BracketTree";
 export default function ChaveamentoPage() {
   const [matches, setMatches] = useState<any[]>([]);
   const [teamsMap, setTeamsMap] = useState<Record<string, { name: string; flag_url: string | null }>>({});
+  const [venuesMap, setVenuesMap] = useState<Record<string, { name: string; city: string }>>({});
   const [loading, setLoading] = useState(true);
 
   async function load() {
@@ -15,6 +16,7 @@ export default function ChaveamentoPage() {
         const j = await r.json();
         setMatches(j.bracket ?? []);
         setTeamsMap(j.teamsMap ?? {});
+        setVenuesMap(j.venuesMap ?? {});
       }
     } catch {}
     setLoading(false);
@@ -31,7 +33,7 @@ export default function ChaveamentoPage() {
           Dados do chaveamento indisponíveis. Faça o sync e configure os bracket_slots no banco.
         </p>
       )}
-      <BracketTree matches={matches} teamsMap={teamsMap} />
+      <BracketTree matches={matches} teamsMap={teamsMap} venuesMap={venuesMap} />
     </div>
   );
 }
