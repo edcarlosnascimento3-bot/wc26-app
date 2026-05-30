@@ -23,13 +23,15 @@ export function TopBar() {
 
   useEffect(() => {
     (async () => {
-      const r = await fetch("/api/profile");
-      if (r.ok) {
-        const data = await r.json();
-        setDisplayName(data.display_name);
-        setAvatarUrl(data.avatar_url);
-        setEditName(data.display_name);
-      }
+      try {
+        const r = await fetch("/api/profile");
+        if (r.ok) {
+          const data = await r.json();
+          setDisplayName(data.display_name);
+          setAvatarUrl(data.avatar_url);
+          setEditName(data.display_name);
+        }
+      } catch {}
     })();
     const id = setInterval(() => {
       fetch("/api/heartbeat", { method: "POST" }).catch(() => console.warn("heartbeat failed"));

@@ -25,7 +25,7 @@ export default function MeusCampeoesPage() {
 
       const [teamsR, picksR, matchesR] = await Promise.all([
         supabase.from("teams").select("id,name,flag_url").order("group_code").order("id"),
-        fetch("/api/champion-pick").then(r => r.json()),
+        fetch("/api/champion-pick").then(r => r.json()).catch(() => ({ picks: [] })),
         supabase.from("matches").select("kickoff_utc").order("kickoff_utc").limit(1).single(),
       ]);
 
@@ -63,12 +63,14 @@ export default function MeusCampeoesPage() {
 
   const save = async () => {
     setSaving(true);
-    const r = await fetch("/api/champion-pick", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ picks: picks.filter(Boolean) }),
-    });
-    if (r.ok) setSavedPicks([...picks]);
+    try {
+      const r = await fetch("/api/champion-pick", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ picks: picks.filter(Boolean) }),
+      });
+      if (r.ok) setSavedPicks([...picks]);
+    } catch {}
     setSaving(false);
   };
 

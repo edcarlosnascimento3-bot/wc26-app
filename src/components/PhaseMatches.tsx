@@ -15,7 +15,7 @@ export function PhaseMatches({ fase }: { fase?: string }) {
 
   useEffect(() => {
     const url = fase ? `/api/current-phase?fase=${fase}` : "/api/current-phase";
-    fetch(url).then(r => r.ok && r.json()).then(j => setData(j));
+    fetch(url).then(r => r.ok && r.json()).then(j => setData(j)).catch(() => setData(null));
   }, [fase]);
 
   if (!data) return <p className="text-sm opacity-50 italic">Carregando...</p>;

@@ -52,16 +52,18 @@ export function MatchCard({ match, prediction, onSaved, teamsMap }: Props) {
 
   async function save() {
     if (blocked || isPast) return;
-    const res = await fetch("/api/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        matchId: match.id,
-        predHome: h === "" ? null : Number(h),
-        predAway: a === "" ? null : Number(a)
-      })
-    });
-    if (res.ok) { setSaved(true); setEditing(false); onSaved?.(); }
+    try {
+      const res = await fetch("/api/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          matchId: match.id,
+          predHome: h === "" ? null : Number(h),
+          predAway: a === "" ? null : Number(a)
+        })
+      });
+      if (res.ok) { setSaved(true); setEditing(false); onSaved?.(); }
+    } catch {}
   }
 
   return (

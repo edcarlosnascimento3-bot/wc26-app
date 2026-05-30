@@ -10,8 +10,10 @@ export default function ClassificacaoPage() {
 
   async function load() {
     setLoading(true);
-    const r = await fetch("/api/standings");
-    if (r.ok) setData(await r.json());
+    try {
+      const r = await fetch("/api/standings");
+      if (r.ok) setData(await r.json());
+    } catch {}
     setLoading(false);
   }
 

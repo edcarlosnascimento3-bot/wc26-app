@@ -9,12 +9,14 @@ export default function ChaveamentoPage() {
 
   async function load() {
     setLoading(true);
-    const r = await fetch("/api/bracket");
-    if (r.ok) {
-      const j = await r.json();
-      setMatches(j.bracket ?? []);
-      setTeamsMap(j.teamsMap ?? {});
-    }
+    try {
+      const r = await fetch("/api/bracket");
+      if (r.ok) {
+        const j = await r.json();
+        setMatches(j.bracket ?? []);
+        setTeamsMap(j.teamsMap ?? {});
+      }
+    } catch {}
     setLoading(false);
   }
 

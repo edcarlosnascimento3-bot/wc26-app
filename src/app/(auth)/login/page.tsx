@@ -15,7 +15,10 @@ function LoginForm() {
     setError("");
     const { error: err } = await supabase.auth.signInWithOtp({
       email,
-      options: { shouldCreateUser: true }
+      options: {
+        shouldCreateUser: true,
+        redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
+      },
     });
     if (err) return setError(err.message);
     setSent(true);

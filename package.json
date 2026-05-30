@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "open": "start https://wc26-app-bnfc.vercel.app"
   },
   "dependencies": {
     "next": "16.2.6",
