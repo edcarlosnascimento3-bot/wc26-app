@@ -93,9 +93,10 @@ export default function ChatPage() {
     }
   };
 
+  useEffect(() => { fetchData(); }, []);
+
   useEffect(() => {
     if (!userId) return;
-    fetchData();
     supabase.from("profiles").update({ last_chat_at: new Date().toISOString() }).eq("id", userId).then(() => {});
     const id = setInterval(fetchData, 5000);
     return () => clearInterval(id);
